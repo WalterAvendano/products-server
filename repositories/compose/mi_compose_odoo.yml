@@ -1,0 +1,36 @@
+services:
+  web:
+    image: odoo:18.0
+    container_name: odoo_web
+    depends_on:
+    - db
+    ports:
+    - 8069:8069
+    volumes:
+    - C:/Users/walte/OneDrive/Escritorio/products-server/repositories/addons:/mnt/extra-addons
+    - C:/Users/walte/OneDrive/Escritorio/products-server/repositories/config/odoo.conf:/etc/odoo/odoo.conf
+    environment:
+      HOST: db
+      USER: odoo
+      PASSWORD: odoo_pass
+      POSTGRES_DB: odoo_db
+    restart: always
+    networks:
+    - odoo-network
+  db:
+    image: postgres:15
+    container_name: odoo_db
+    volumes:
+    - odoo-db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo_pass
+      POSTGRES_DB: odoo_db
+    restart: always
+    networks:
+    - odoo-network
+volumes:
+  odoo-db-data: {}
+networks:
+  odoo-network:
+    driver: bridge
